@@ -1,15 +1,24 @@
 package com.aprendiz.ragp.concentresep1.controllers;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aprendiz.ragp.concentresep1.R;
+import com.aprendiz.ragp.concentresep1.models.AdapterJ;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +46,12 @@ public class Juego extends AppCompatActivity {
     GridView contenedorJuego;
     boolean bandera = true;
     ImageView imagen1, imagen2;
-
+    int [] segundos={0,0};
     SharedPreferences juegoC;
+
+    MediaPlayer up1;
+    MediaPlayer pipe;
+    MediaPlayer finish;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +61,160 @@ public class Juego extends AppCompatActivity {
         inputValues();
         obtenerMedidas();
         turnos();
+        go_game();
+        AdapterJ adapterJ = new AdapterJ(imagenesFondo,alto,ancho,this);
+        contenedorJuego.setAdapter(adapterJ);
+        contenedorJuego.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                canselect++;
+                ImageView item = (ImageView) view;
+                if (pos1==position || pos2==position){
+                    canselect--;
+                }
+
+                if (canselect==1){
+                    pos1=position;
+                    imagen1=item;
+                }
+
+
+                if (canselect==2){
+                    pos2=position;
+                    imagen2=item;
+                }
+
+                mostrarImagen(item, position);
+
+            }
+        });
+    }
+
+    private void mostrarImagen(ImageView item, int position) {
+        BitmapFactory.Options op = new BitmapFactory.Options();
+        op.inSampleSize=3;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),imagenesAleatorias[position],op);
+        item.setImageBitmap(bitmap);
+        if (canselect==2){
+            movimientos++;
+            if (modo_juego==2){
+                txtTiempo.setText("Movimientos: "+movimientos);
+            }
+            canselect=0;
+
+            new ValidarJuego().execute();
+        }
+
 
     }
+
+    public class ValidarJuego extends AsyncTask<Void,Void,Void>{
+
+        @Override
+        protected void onPreExecute() {
+            contenedorJuego.setEnabled(false);
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try{
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+
+            if (inicioJuego==1){
+                txtJugador1.setTextColor(getColor(R.color.colorVerde));
+                txtJugador2.setTextColor(getColor(R.color.colorGris));
+                inicioJuego=2;
+            }else {
+
+                if (inicioJuego == 2) {
+                    txtJugador2.setTextColor(getColor(R.color.colorVerde));
+                    txtJugador1.setTextColor(getColor(R.color.colorGris));
+                    inicioJuego = 1;
+                }
+            }
+
+            if (imagenesAleatorias[pos1]==imagenesAleatorias[pos2]) {
+                imagen1.setVisibility(View.INVISIBLE);
+                imagen2.setVisibility(View.INVISIBLE);
+                imagen1 = null;
+                imagen2 = null;
+
+                up1.start();
+
+                if (inicioJuego == 2) {
+                    puntuacionJ2 += 100;
+                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
+                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                }
+
+                if (inicioJuego == 1) {
+                    puntuacionJ1 += 100;
+                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
+                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                }
+                salir--;
+
+                if (salir == 0) {
+                    bandera = false;
+                    finish.start();
+                }
+
+            }
+
+            if (imagen1!=null && imagen2!=null){
+                BitmapFactory.Options op = new BitmapFactory.Options();
+                op.inSampleSize=3;
+                Bitmap bitmap = BitmapFactory.decodeResource(getResources(),fondoJuego,op);
+                imagen1.setImageBitmap(bitmap);
+                imagen2.setImageBitmap(bitmap);
+
+                if (inicioJuego == 2) {
+                    puntuacionJ2 -= 1;
+                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
+                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                }
+
+                if (inicioJuego == 1) {
+                    puntuacionJ1 -= 1;
+                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
+                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                }
+
+                pipe.start();
+
+            }
+
+            canselect=0;
+            pos1=-1;
+            pos2=-1;
+            contenedorJuego.setEnabled(true);
+
+
+        }
+    }
+
 
     private void inizialite() {
         txtJugador1 = findViewById(R.id.txtJugador1J);
         txtJugador2 = findViewById(R.id.txtJugador2J);
         txtPuntuacion1 = findViewById(R.id.txtPuntuacion1J);
         txtPuntuacion2 = findViewById(R.id.txtPuntuacion2J);
+        txtTiempo = findViewById(R.id.txtTiempoJ);
         contenedorJuego = findViewById(R.id.contenedorJuego);
+        pTiempo = findViewById(R.id.progressBar);
+        up1 = MediaPlayer.create(this,R.raw.smb_up);
+        pipe = MediaPlayer.create(this,R.raw.smb_pipe);
+        finish = MediaPlayer.create(this,R.raw.smb_stage_clear);
     }
 
 
@@ -71,21 +229,139 @@ public class Juego extends AppCompatActivity {
         contenedorJuego.setPadding(10,10,10,10);
         salir=nivel;
 
+        if (nivel==4){
+            ancho=dpW/3;
+            contenedorJuego.setNumColumns(2);
+        }
+
+        if (nivel==6){
+            ancho=dpW/4;
+            contenedorJuego.setNumColumns(3);
+        }
+
+        if (nivel==8){
+            ancho=dpW/5;
+            contenedorJuego.setNumColumns(4);
+        }
+
+        alto+=40;
+        ancho+=40;
+
 
     }
 
     private void inputValues() {
         juegoC = getSharedPreferences("juegoC",MODE_PRIVATE);
-        //nivel = MenuJ.nivel;
+        nivel = MenuJ.nivel;
         modo_juego = juegoC.getInt("modo",1);
-
+        txtJugador1.setText(Splash.nombres[0]);
+        txtJugador2.setText(Splash.nombres[1]);
+        pTiempo.setMax(60);
+        bandera=true;
     }
 
     private void turnos() {
         inicioJuego = (int) (Math.random()*2)+1;
         if (inicioJuego==1){
-
+            txtJugador1.setTextColor(getColor(R.color.colorVerde));
+            txtJugador2.setTextColor(getColor(R.color.colorGris));
+            Toast.makeText(this, "Inicia Jugador 1", Toast.LENGTH_SHORT).show();
+            txtPuntuacion1.setText("Puntuación: "+puntuacionJ1);
+            txtPuntuacion2.setText("Puntuación: "+puntuacionJ2);
         }
+
+        if (inicioJuego==2){
+            txtJugador2.setTextColor(getColor(R.color.colorVerde));
+            txtJugador1.setTextColor(getColor(R.color.colorGris));
+            Toast.makeText(this, "Inicia Jugador 2", Toast.LENGTH_SHORT).show();
+            txtPuntuacion1.setText("Puntuación: "+puntuacionJ1);
+            txtPuntuacion2.setText("Puntuación: "+puntuacionJ2);
+        }
+    }
+
+
+    private void go_game() {
+        generarFondo();
+        generarSelec();
+        generarAleatorias();
+        chronometer();
+    }
+
+    private void generarFondo() {
+        imagenesFondo = new int[nivel*2];
+        for (int i=0; i<nivel*2; i++){
+            imagenesFondo[i] = fondoJuego;
+        }
+    }
+
+    private void generarSelec() {
+        imagenesSelect = new ArrayList<>();
+        for (int i=0; i<nivel; i++){
+            int tmp = (int) (Math.random() * nivel);
+            if (!imagenesSelect.contains(imagenesJuego[tmp])){
+                imagenesSelect.add(imagenesJuego[tmp]);
+            }else {
+                i--;
+            }
+        }
+    }
+
+    private void generarAleatorias() {
+        imagenesAleatorias = new int[nivel*2];
+        for (int i=0;i<nivel;i++){
+            int tmp = 0;
+            do {
+                int valor = (int) (Math.random() * nivel*2);
+                if (imagenesAleatorias[valor]==0){
+                    imagenesAleatorias[valor]=imagenesSelect.get(i);
+                    tmp++;
+                }
+
+            }while (tmp<2);
+        }
+    }
+
+    private void chronometer() {
+        if (modo_juego==1){
+            txtTiempo.setText("Tiempo: "+segundos[1]);
+        }else {
+            txtTiempo.setText("Movimientos: "+movimientos);
+        }
+
+
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (bandera) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            segundos[0]++;
+                            segundos[1]++;
+
+                            pTiempo.setProgress(segundos[0]);
+
+                            if (segundos[0] == 60) {
+                                segundos[0] = 0;
+                            }
+
+                            if (modo_juego == 1) {
+                                txtTiempo.setText("Tiempo: " + segundos[1]);
+                            }
+
+
+                        }
+                    });
+                }
+            }
+        });
+        thread.start();
     }
 
 }

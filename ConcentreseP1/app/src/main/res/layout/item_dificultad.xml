@@ -21,15 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="RadioButton"
-            tools:text="@string/facil" />
+            android:checked="true"
+            android:text="@string/facil" />
 
         <RadioButton
             android:id="@+id/rbtnMedio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="RadioButton" />
+            android:text="@string/medio" />
 
         <RadioButton
             android:id="@+id/rbtnDificil"
