@@ -1,17 +1,22 @@
 package com.aprendiz.ragp.concentresep1.controllers;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -19,6 +24,8 @@ import android.widget.Toast;
 
 import com.aprendiz.ragp.concentresep1.R;
 import com.aprendiz.ragp.concentresep1.models.AdapterJ;
+import com.aprendiz.ragp.concentresep1.models.GestorDB;
+import com.aprendiz.ragp.concentresep1.models.Score;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,6 +174,68 @@ public class Juego extends AppCompatActivity {
                 if (salir == 0) {
                     bandera = false;
                     finish.start();
+
+                    LayoutInflater inflater = getLayoutInflater();
+                    View view = inflater.inflate(R.layout.item_resumen,null);
+                    TextView txtJ1 = view.findViewById(R.id.txtJ1R);
+                    TextView txtJ2 = view.findViewById(R.id.txtJ2R);
+                    TextView txtP1 = view.findViewById(R.id.txtP1R);
+                    TextView txtP2 = view.findViewById(R.id.txtP2R);
+                    TextView txtResultado = view.findViewById(R.id.txtResultado);
+                    ImageButton imgT = view.findViewById(R.id.imgTwitter);
+                    ImageButton imgF = view.findViewById(R.id.imgFacebook);
+                    CardView cardView = view.findViewById(R.id.btnContinuarR);
+                    txtJ1.setText(txtJugador1.getText());
+                    txtJ2.setText(txtJugador2.getText());
+                    txtP1.setText(txtPuntuacion1.getText());
+                    txtP2.setText(txtPuntuacion2.getText());
+                    txtResultado.setText(txtTiempo.getText());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(Juego.this);
+                    builder.setView(view);
+                    builder.setCancelable(false);
+                    builder.show();
+                    cardView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            finish();
+                        }
+                    });
+
+                    GestorDB gestorDB = new GestorDB(Juego.this);
+                    final Score jugador1 = new Score();
+                    final Score jugador2 = new Score();
+                    jugador1.setJugador(txtJugador1.getText().toString());
+                    jugador2.setJugador(txtJugador2.getText().toString());
+                    jugador1.setPuntuacion(txtPuntuacion1.getText().toString());
+                    jugador2.setPuntuacion(txtPuntuacion2.getText().toString());
+                    jugador1.setModo(Integer.toString(modo_juego));
+                    jugador1.setDifcultad(Integer.toString(nivel));
+                    jugador2.setModo(Integer.toString(modo_juego));
+                    jugador2.setDifcultad(Integer.toString(nivel));
+                    gestorDB.inputData(jugador1);
+                    gestorDB.inputData(jugador2);
+                    imgT.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_SEND);
+                            intent.setType("text/plain");
+                            String string = jugador1.getJugador()+" "+jugador1.getPuntuacion()+"\n"+
+                                    jugador2.getJugador()+" "+jugador2.getPuntuacion()+"\n"+
+                                    "nivel: "+nivel+" modo de juego "+modo_juego;
+                            intent.setPackage("com.twitter.android");
+                            intent.putExtra(Intent.EXTRA_TEXT, string);
+                            try {
+
+                                startActivity(intent);
+
+                            }catch (Exception e){
+                                Toast.makeText(Juego.this, "No cuentas con esta app", Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                        }
+                    });
+
+
                 }
 
             }
