@@ -153,14 +153,14 @@ public class Juego extends AppCompatActivity {
 
                 if (inicioJuego == 2) {
                     puntuacionJ2 += 100;
-                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
-                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                    txtPuntuacion1.setText(Integer.toString(puntuacionJ1));
+                    txtPuntuacion2.setText(Integer.toString(puntuacionJ2));
                 }
 
                 if (inicioJuego == 1) {
                     puntuacionJ1 += 100;
-                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
-                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                    txtPuntuacion1.setText(Integer.toString(puntuacionJ1));
+                    txtPuntuacion2.setText(Integer.toString(puntuacionJ2));
                 }
                 salir--;
 
@@ -180,14 +180,14 @@ public class Juego extends AppCompatActivity {
 
                 if (inicioJuego == 2) {
                     puntuacionJ2 -= 1;
-                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
-                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                    txtPuntuacion1.setText(Integer.toString(puntuacionJ1));
+                    txtPuntuacion2.setText(Integer.toString(puntuacionJ2));
                 }
 
                 if (inicioJuego == 1) {
                     puntuacionJ1 -= 1;
-                    txtPuntuacion1.setText("Puntuación: " + puntuacionJ1);
-                    txtPuntuacion2.setText("Puntuación: " + puntuacionJ2);
+                    txtPuntuacion1.setText(Integer.toString(puntuacionJ1));
+                    txtPuntuacion2.setText(Integer.toString(puntuacionJ2));
                 }
 
                 pipe.start();
@@ -266,16 +266,16 @@ public class Juego extends AppCompatActivity {
             txtJugador1.setTextColor(getColor(R.color.colorVerde));
             txtJugador2.setTextColor(getColor(R.color.colorGris));
             Toast.makeText(this, "Inicia Jugador 1", Toast.LENGTH_SHORT).show();
-            txtPuntuacion1.setText("Puntuación: "+puntuacionJ1);
-            txtPuntuacion2.setText("Puntuación: "+puntuacionJ2);
+            txtPuntuacion1.setText(Integer.toString(puntuacionJ1));
+            txtPuntuacion2.setText(Integer.toString(puntuacionJ2));
         }
 
         if (inicioJuego==2){
             txtJugador2.setTextColor(getColor(R.color.colorVerde));
             txtJugador1.setTextColor(getColor(R.color.colorGris));
             Toast.makeText(this, "Inicia Jugador 2", Toast.LENGTH_SHORT).show();
-            txtPuntuacion1.setText("Puntuación: "+puntuacionJ1);
-            txtPuntuacion2.setText("Puntuación: "+puntuacionJ2);
+            txtPuntuacion1.setText(Integer.toString(puntuacionJ1));
+            txtPuntuacion2.setText(Integer.toString(puntuacionJ2));
         }
     }
 

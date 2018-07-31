@@ -21,8 +21,8 @@
 
     <TextView
         android:id="@+id/txtPuntuacion1J"
-        android:layout_width="169dp"
-        android:layout_height="65dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
@@ -44,8 +44,8 @@
 
     <TextView
         android:id="@+id/txtPuntuacion2J"
-        android:layout_width="178dp"
-        android:layout_height="54dp"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
