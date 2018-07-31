@@ -35,7 +35,7 @@ public class Juego extends AppCompatActivity {
             R.drawable.trofeocham,
     };
 
-    private int fondoJuego = R.drawable.signo;
+    private int fondoJuego = R.drawable.juego;
     private int [] imagenesFondo, imagenesAleatorias;
     private List<Integer> imagenesSelect = new ArrayList<>();
     TextView txtJugador1, txtJugador2, txtPuntuacion1, txtPuntuacion2, txtTiempo;
