@@ -6,4 +6,6 @@
     <string name="facil">Fácil</string>
     <string name="medio">Medio</string>
     <string name="dificil">Difícil</string>
+    <string name="tiempo">Tiempo</string>
+    <string name="intentos">Intentos</string>
 </resources>
