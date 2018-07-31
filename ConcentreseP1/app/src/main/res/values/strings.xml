@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">ConcentreseP1</string>
+    <string name="ingresejugador1">Ingrese Jugador 1</string>
+    <string name="ingresejugador2">Ingrese Jugador 2</string>
+    <string name="jugar">Jugar</string>
+    <string name="facil">Fácil</string>
+    <string name="medio">Medio</string>
+    <string name="dificil">Difícil</string>
+</resources>
