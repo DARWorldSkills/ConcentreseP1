@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.aprendiz.ragp.concentresep1.R;
 
@@ -31,15 +32,21 @@ public class Splash extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Splash.this);
                 final EditText txtNombre1 = view.findViewById(R.id.txtJugador1I);
                 final EditText txtNombre2 = view.findViewById(R.id.txtJugador2I);
-                builder.setTitle("Jugadores");
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                builder.setNeutralButton("Aceptar", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which){
                         nombres[0] = txtNombre1.getText().toString();
                         nombres[1] = txtNombre2.getText().toString();
-                        Intent intent = new Intent(Splash.this, MenuJ.class);
-                        startActivity(intent);
-                        finish();
+                        if (nombres[0].length()>0 && nombres[1].length()>0) {
+
+                            Intent intent = new Intent(Splash.this, MenuJ.class);
+                            startActivity(intent);
+                            finish();
+                        }else {
+                            Toast.makeText(Splash.this, "Los jugadores no se guardaron", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(Splash.this, MenuJ.class);
+                            startActivity(intent);
+                        }
                     }
                 });
 

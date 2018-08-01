@@ -16,7 +16,7 @@ public class GestorDB extends SQLiteOpenHelper{
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("CREATE TABLE SCORE (JUGADOR TEXT, PUNTUACION TEXT, DIFICULTAD TEXT, MODO TEXT)");;
+        db.execSQL("CREATE TABLE SCORE (JUGADOR TEXT, PUNTUACION TEXT, DIFICULTAD TEXT, MODO TEXT);");
     }
 
     @Override
@@ -37,10 +37,10 @@ public class GestorDB extends SQLiteOpenHelper{
 
     }
 
-    public List<Score> scoreList(String dificultad, String modo){
+    public List<Score> scoreList(String modo, String dificultad){
         List<Score> results = new ArrayList<>();
         SQLiteDatabase db = getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM SCORE WHERE DIFICULTAD = '"+dificultad+"' AND MODO='"+modo+"'; ORDER BY PUNTUACION DESC",null);
+        Cursor cursor = db.rawQuery("SELECT * FROM SCORE WHERE MODO='"+modo+"' AND DIFICULTAD='"+dificultad+"' ORDER BY PUNTUACION DESC;",null);
         if (cursor.moveToFirst()){
             do {
                 Score score = new Score();

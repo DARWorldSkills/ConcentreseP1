@@ -24,7 +24,8 @@ public class Puntuacion extends AppCompatActivity implements View.OnClickListene
         setContentView(R.layout.activity_puntuacion);
         inizialite();
         inputData();
-
+        modo="1";
+        dificultad="4";
     }
 
     private void inizialite() {
@@ -49,11 +50,17 @@ public class Puntuacion extends AppCompatActivity implements View.OnClickListene
 
     public void inputData(){
         GestorDB gestorDB = new GestorDB(this);
+
         List<Score> list =gestorDB.scoreList(modo,dificultad);
+
         if (list.size()>0){
             txtPrimero.setText(list.get(0).getJugador()+" "+list.get(0).getPuntuacion());
         }else {
             Toast.makeText(this, "No hay puntuaciones", Toast.LENGTH_SHORT).show();
+            txtPrimero.setText("");
+            txtSegundo.setText("");
+            txtTercero.setText("");
+            txtCuarto.setText("");
         }
 
         if (list.size()>1){
@@ -77,24 +84,28 @@ public class Puntuacion extends AppCompatActivity implements View.OnClickListene
         switch (v.getId()){
             case R.id.rbtnFacilP:
                 dificultad="4";
-
+                inputData();
                 break;
 
             case R.id.rbtnMedioP:
                 dificultad="6";
+                inputData();
                 break;
 
 
             case R.id.rbtnDificilP:
                 dificultad="8";
+                inputData();
                 break;
 
             case R.id.rbtnTiempoP:
                 modo="1";
+                inputData();
                 break;
 
             case R.id.rbtnIntentosP:
                 modo="2";
+                inputData();
                 break;
 
         }

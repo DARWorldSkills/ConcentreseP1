@@ -323,8 +323,13 @@ public class Juego extends AppCompatActivity {
         juegoC = getSharedPreferences("juegoC",MODE_PRIVATE);
         nivel = MenuJ.nivel;
         modo_juego = juegoC.getInt("modo",1);
-        txtJugador1.setText(Splash.nombres[0]);
-        txtJugador2.setText(Splash.nombres[1]);
+        if (Splash.nombres[0].length()>0 || Splash.nombres[1].length()>0) {
+            txtJugador1.setText(Splash.nombres[0]);
+            txtJugador2.setText(Splash.nombres[1]);
+        }else {
+            txtJugador1.setText("Jugador 1");
+            txtJugador2.setText("Jugador 2");
+        }
         pTiempo.setMax(60);
         bandera=true;
     }
